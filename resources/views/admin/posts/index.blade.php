@@ -21,6 +21,7 @@
                   <th scope="col">Contenuto del post</th>
                   <th scope="col">Slug</th>
                   <th scope="col">Categoria</th>
+                  <th scope="col">Tags</th>
                   <th scope="col" colspan="3"></th>
                </tr>
                </thead>
@@ -40,6 +41,20 @@
                      @else
                         <td>Categoria mancante</td>
                      @endif
+
+                     {{-- nome del tag va gestito con un forelse --}}
+                     <td>
+
+                        @forelse ($post->tags as $tag)
+                        <span class="badge rounded-pill bg-info text-white">
+                           {{ $tag->name }}
+                        </span>
+                        @empty
+                           -
+                        @endforelse
+
+                     </td>
+                     
                      
                      <td>
                         <a href="{{ route('admin.posts.show', $post) }}" type="button" class="btn btn-success ">

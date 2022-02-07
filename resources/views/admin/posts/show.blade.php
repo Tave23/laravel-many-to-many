@@ -24,6 +24,15 @@
             </h5>
          @endif
 
+         @forelse ($post->tags as $tag)
+            <span class="badge rounded-pill bg-info text-white">
+               {{ $tag->name }}
+            </span>
+         @empty
+            
+         @endforelse
+
+
          {{-- contenuto del post --}}
          <p class="my-3">
             Contenuto: {{$post->content}}
