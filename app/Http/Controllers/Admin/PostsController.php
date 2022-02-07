@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Category;
 use App\Http\Controllers\Controller;
 use App\Post;
+use App\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -36,7 +37,9 @@ class PostsController extends Controller
     {
         $categoryList = Category::all();
 
-        return view('admin.posts.create', compact('categoryList'));
+        $tags = Tag::all();
+
+        return view('admin.posts.create', compact('categoryList', 'tags'));
     }
 
     /**
@@ -74,6 +77,11 @@ class PostsController extends Controller
         // salvo
         $new_post->save();
 
+
+        if (array_key_exists('tags', $created_post)) {
+            $new_post->tags()->attach($created_post['tags']);
+        }
+
         // redirect a show
         return redirect()->route('admin.posts.show', $new_post);
 
@@ -106,8 +114,12 @@ class PostsController extends Controller
     {
         $post = Post::find($id);
 
+        $categoryList = Category::all();
+
+        $tags = Tag::all();
+
         if ($post) {
-            return view('admin.posts.edit', compact('post'));
+            return view('admin.posts.edit', compact('post', 'categoryList', 'tags'));
         }
 
         abort(404, 'Post non presente nel database');
@@ -143,6 +155,13 @@ class PostsController extends Controller
         }
 
         $post->update($edit_data);
+
+        if (array_key_exists('tags', $edit_data)) {
+            // sync e non attach per ristabilire relazioni e aggiornarle
+            $post->tags()->sync($edit_data['tags']);
+        } else{
+            $post->tags()->detach();
+        }
 
         return redirect()->route('admin.posts.index', $post);
     }

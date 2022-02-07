@@ -53,6 +53,39 @@
               @enderror
             </div>
 
+            {{-- input categoria --}}
+            <div class="mb-3">
+               <select name="category_id" id="category_id" class="form-control" aria-label="Default select example">
+                  <option value="" selected>Seleziona la categoria</option>
+                  @foreach ($categoryList as $category)
+                  <option value="{{ $category->id }}" @if ($category->id == old('category_id')) selected @endif>
+                     {{ $category->name }}
+                  </option>
+                  @endforeach
+                  
+               </select>
+            </div>
+
+            {{-- input tags --}}
+            <div class="mb-3">
+               
+               @foreach ($tags as $tag)
+               <span class="mr-2 d-inline-block">
+
+                  <input type="checkbox" name="tags[]" value="{{$tag->id}}" id="tag{{$loop->iteration}}"
+
+                  {{-- gestione del checked! --}}
+                  @if(!$errors->any() && $post->tags->contains($tag->id)) checked
+                  @elseif ($errors->any() && in_array($tag->id, old('tags', [])))
+                  @endif>
+
+                  <label for="tag{{$loop->iteration}}">{{ $tag->name }}</label>
+
+               </span>
+               @endforeach
+
+            </div>
+
             {{-- bottoni salva e reset --}}
             <button type="submit" class="btn btn-success">Salva Post</button>
             <button type="reset" class="btn btn-danger">Reset Post</button>
