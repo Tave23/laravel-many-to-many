@@ -12,6 +12,10 @@ class Post extends Model
         return $this->belongsTo('App\Category');
     }
 
+    public function tags(){
+        return $this->belongsToMany('App\Tag');
+    }
+
 
     // dobbiamo rempire i dati dentro l'array attraverso $fillable
     protected $fillable = ['title_post', 'content', 'category_id'];
